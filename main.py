@@ -44,6 +44,7 @@ class App:
         
     def initialize_opengl(self) -> None:
         glClearColor(0.1, 0.2, 0.4, 1.0)
+        self.VAO = glGenVertexArrays(1)
         self.shader = create_shader_program("shaders/vertex.glsl", "shaders/fragment.glsl")
         
         
@@ -56,10 +57,14 @@ class App:
             glfw.poll_events()
             
             glClear(GL_COLOR_BUFFER_BIT)
+            glUseProgram(self.shader)
+            glBindVertexArray(self.VAO)
+            glDrawArrays(GL_TRIANGLES, 0, 3)
             glfw.swap_buffers(self.window)
     
     def quit(self):
-        
+        glDeleteVertexArrays(1, (self.VAO,))
+        glDeleteProgram(self.shader)
         glfw.destroy_window(self.window)
         glfw.terminate()
     
